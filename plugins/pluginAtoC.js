@@ -4,11 +4,11 @@ module.exports = declare(api => {
     api.assertVersion(7);
 
     return {
-        name: "plugin1",
+        name: "plugin2",
 
         visitor: {
-            Identifier(path) {
-                path.node.name = path.node.name + "1";
+            VariableDeclarator(path) {
+                path.node.id.name = "c";
             }
         }
     };

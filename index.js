@@ -1,24 +1,29 @@
 const fs = require("fs");
 const babelCore = require("@babel/core");
 
-const plugin1 = require("./plugins/plugin1");
-const plugin2 = require("./plugins/plugin2");
+const pluginAtoB = require("./plugins/pluginAtoB");
+const pluginAtoC = require("./plugins/pluginAtoC");
 
 const inputFile = "./code.js";
 
 fs.readFile(inputFile, "utf8", (err, code) => {
     if (err) throw err;
 
-    babelCore.transform(
-        code,
-        {
-            plugins: [plugin1, plugin2]
-        },
-        function(err, result) {
-            if (err) {
-                console.log(err);
+    function transform(message, plugins) {
+        babelCore.transform(
+            code,
+            {
+                plugins: plugins
+            },
+            function(err, result) {
+                console.log(message, ": ", result.code);
             }
-            console.log(result.code);
-        }
-    );
+        );
+    }
+
+    transform("transform a to b", [pluginAtoB]);
+    transform("transform a to c", [pluginAtoC]);
+
+    transform("transform a to b, a to c", [pluginAtoB, pluginAtoC]);
+    transform("transform a to c, a to b", [pluginAtoC, pluginAtoB]);
 });
